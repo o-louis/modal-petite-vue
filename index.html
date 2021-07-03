@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <script type="module">
+    import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'
+
+    const store = reactive({
+      isModalVisible: false,
+      toggleModal() {
+        this.isModalVisible = !this.isModalVisible;
+      }
+    })
+
+    const Modal = () => {
+      return {
+        $template: '#modal-container'
+      }
+    }
+
+    const UserInput = () => {
+      return {
+        $template: '#input-container',
+
+        // DATA
+        input: '',
+        placeholder: 'Enter the magic password...',
+        hint: 'Hint: petite-vue',
+        magicPassword: 'petite-vue', // too easy eheh
+
+        // METHODS
+        checkMagicPassword() {
+          if (this.input === this.magicPassword) {
+            store.toggleModal();
+            this.input = '';
+          }
+        },
+      }
+    }
+
+    createApp({
+      store,
+      Modal,
+      UserInput,
+    }).mount();
+
+  </script>
+
+  <div id="app" v-scope>
+    <div v-scope="UserInput()" class="input-container"></div>
+    <div v-scope="Modal()" v-show="store.isModalVisible" class="modal"></div>
+  </div>
+
+  <template id="input-container">
+    <input v-model="input" :placeholder="placeholder" @keyup.enter="checkMagicPassword" />
+    <p>{{ hint }}</p>
+  </template>
+
+  <template id="modal-container">
+    <span @click="store.toggleModal">X</span>
+    <h1>Simple modal box</h1>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iusto ea distinctio porro. Aut enim ab est, quis
+      quidem exercitationem dolor totam nulla rerum nemo nisi numquam labore accusamus eveniet neque?
+    </p>
+  </template>
+</body>
+
+</html>
